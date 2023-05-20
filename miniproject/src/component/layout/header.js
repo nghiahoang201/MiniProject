@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
+import router from "../router";
 export default function Header() {
   return (
     <div>
@@ -14,7 +15,7 @@ export default function Header() {
             <MenuIcon />
           </IconButton>
           <Link
-            to="/"
+            to={router.home}
             style={{
               textDecoration: "none",
               color: "white",
@@ -24,7 +25,7 @@ export default function Header() {
             home
           </Link>
           <Link
-            to="/user"
+            to="/users?page=1"
             style={{
               textDecoration: "none",
               color: "white",

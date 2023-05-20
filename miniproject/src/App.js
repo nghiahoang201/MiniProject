@@ -5,6 +5,7 @@ import Home from "./component/home";
 import AddUser from "./component/user/addUser";
 import UpdateUser from "./component/user/updateUser";
 import Error from "./component/404";
+import router from "./component/router";
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route
-            path="/"
+            path={router.home}
             element={
               <Layout>
                 <Home />
@@ -21,7 +22,7 @@ function App() {
           />
 
           <Route
-            path="/user"
+            path={router.users}
             element={
               <Layout>
                 <User />
@@ -30,7 +31,7 @@ function App() {
           />
 
           <Route
-            path="/createUser"
+            path={router.createUsers}
             element={
               <Layout>
                 <AddUser />
@@ -39,7 +40,7 @@ function App() {
           />
 
           <Route
-            path="/*"
+            path={router.updateUsers}
             element={
               <Layout>
                 <UpdateUser />
