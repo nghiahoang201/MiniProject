@@ -20,7 +20,7 @@ const iniitialValue = {
   users: [],
   user: {},
   loading: false,
-  error: false,
+  error: "",
 };
 
 const myReducer = (state = iniitialValue, action) => {
@@ -38,13 +38,13 @@ const myReducer = (state = iniitialValue, action) => {
         users: state.users.filter((item) => item?.id !== action.payload),
         loading: false,
       };
+    case CREATE_USER_SUCCESS:
     case UPDATE_USER_SUCCESS:
-      return { ...state, user: action.payload, loading: false };
+      return { ...state, loading: false };
 
     case GET_USERS_SUCCESS:
       return { ...state, users: action.payload, loading: false };
     case GET_USER_SUCCESS:
-    case CREATE_USER_SUCCESS:
       return { ...state, user: action.payload, loading: false };
     case GET_USERS_ERROR:
     case GET_USER_ERROR:
@@ -53,7 +53,7 @@ const myReducer = (state = iniitialValue, action) => {
     case UPDATE_USER_ERROR:
       return { ...state, error: action.payload, loading: false };
     default:
-      return state;
+      return { ...state };
   }
 };
 

@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, TextField, Button } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import { useDispatch } from "react-redux";
 import { createUser } from "../../widgets/action";
 import CheckErrorValue from "../checkErrorValue";
+import { useNavigate } from "react-router-dom";
 
 const AddUser = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const inittialValue = {
     name: "",
     email: "",
@@ -28,6 +37,7 @@ const AddUser = () => {
     ) {
       dispatch(createUser(values));
       setValue(inittialValue);
+      navigate("/users?page=1");
     }
   };
 
@@ -48,7 +58,7 @@ const AddUser = () => {
           >
             <TextField
               label="name"
-              sx={{ width: 500, height: 40, mt: 4 }}
+              sx={{ width: 500, mt: 4 }}
               value={values.name}
               onChange={(e) => setValue({ ...values, name: e.target.value })}
               required
@@ -61,7 +71,7 @@ const AddUser = () => {
             <TextField
               label="email"
               type="email"
-              sx={{ width: 500, height: 40, mt: 4 }}
+              sx={{ width: 500, mt: 4 }}
               value={values.email}
               onChange={(e) => setValue({ ...values, email: e.target.value })}
               required
@@ -71,39 +81,45 @@ const AddUser = () => {
                 {errors?.email}
               </Box>
             )}
-            <TextField
-              label="gender"
-              type=""
-              row={4}
-              sx={{ width: 500, height: 40, mt: 4 }}
-              value={values.gender}
+            <Select
+              defaultValue="male"
+              label="Gender"
+              value={values?.gender}
+              sx={{ width: 500, mt: 4 }}
               onChange={(e) => setValue({ ...values, gender: e.target.value })}
               required
-            />
+            >
+              <MenuItem value="male">male</MenuItem>
+              <MenuItem value="female">female</MenuItem>
+            </Select>
             {errors?.gender && (
               <Box sx={{ my: 2, color: "red", margin: "30px 0 0 0" }}>
                 {errors?.gender}
               </Box>
             )}
-            <TextField
-              label="status"
-              row={4}
-              sx={{ width: 500, height: 40, mt: 4 }}
-              value={values.status}
+
+            <Select
+              defaultValue="active"
+              label="Status"
+              value={values?.status}
+              sx={{ width: 500, mt: 4 }}
               onChange={(e) => setValue({ ...values, status: e.target.value })}
               required
-            />
+            >
+              <MenuItem value="active">active</MenuItem>
+              <MenuItem value="inactive">inactive</MenuItem>
+            </Select>
+
             {errors?.status && (
               <Box sx={{ my: 2, color: "red", margin: "30px 0 0 0" }}>
                 {errors?.status}
               </Box>
             )}
             <Button
-              type="submit"
               variant="outlined"
               color="primary"
-              sx={{ width: 100, height: 40, mt: 4 }}
-              onClick={() => handleSubmit()}
+              sx={{ width: 100, mt: 4 }}
+              onClick={handleSubmit}
             >
               Submit
             </Button>

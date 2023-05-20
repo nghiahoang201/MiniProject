@@ -11,55 +11,61 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteUser, getUser, getUsers } from "../../widgets/action";
+import { deleteUser, getUsers } from "../../widgets/action";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import AddIcon from "@mui/icons-material/Add";
 import { Link, useNavigate } from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import router from "../router";
 
 const User = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const match = window.location.href;
-  const [page, setPage] = useState(1);
+  const search = window.location.search;
+  const params = parseInt(new URLSearchParams(search).get("page"));
+
+  const [page, setPage] = useState(params);
 
   useEffect(() => {
-    if (match === "http://localhost:3000/user") {
-      dispatch(getUsers());
+    if (match === `http://localhost:3000/users${search}`) {
+      dispatch(getUsers(search));
+      setPage(params);
     }
-  }, [dispatch, match]);
+  }, [dispatch, match, page, search, params]);
 
   const { users, loading, error } = useSelector((state) => state.myReducer);
 
   const handleDeleteUser = (id) => {
-    dispatch(deleteUser(id));
+    if (window.confirm("bạn có chắc muốn xóa user?")) {
+      dispatch(deleteUser(id));
+    }
   };
 
   const handleGetAnUser = (id) => {
-    dispatch(getUser(id));
-    navigate(`/${id}`);
+    navigate(`v2/users/${id}`);
   };
 
   const handleNexPage = () => {
     if (page < 20) {
-      setPage(page + 1);
-      dispatch(getUsers(page));
+      setPage((page) => page + 1);
+      navigate(`/users?page=${page + 1}`);
     }
   };
 
   const handlePrevPage = () => {
     if (page > 1) {
-      setPage(page - 1);
-      dispatch(getUsers(page));
+      setPage((page) => page - 1);
+      navigate(`/users?page=${page - 1}`);
     }
   };
 
   if (loading) {
     return <div>loadding...</div>;
   } else if (error) {
-    navigate("/404");
+    // navigate("/404");
   } else {
     return (
       <Box mt={2}>
@@ -73,7 +79,7 @@ const User = () => {
         >
           Table User:
           <Link
-            to="/createUser"
+            to={router.createUsers}
             style={{
               textDecoration: "none",
               fontSize: "14px",

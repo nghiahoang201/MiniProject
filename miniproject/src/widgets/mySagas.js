@@ -20,21 +20,20 @@ import {
 
 // get all users
 
-const ActionToken =
-  "f860f9f4360f2d04b025eaa291ab516d766620c06473e31aea6d5959b89b7acc";
+export const ActionToken =
+  "5434d3e0c7800431d495d59217ab12582d44ef44a93fc8b2bc47779b6cfbc2d7";
 
 const getAllUsers = async (page) => {
   return await axios.get(
-    `https://gorest.co.in/public/v2/users?page=${page}&per_page=10 `
+    `https://gorest.co.in/public/v2/users${page}&per_page=10 `,
+    { headers: { Authorization: "Bearer " + ActionToken } }
   );
 };
 
 function* fetchGetAllUsers({ payload }) {
-  const response = yield call(getAllUsers, payload);
   try {
-    if (response.status === 200) {
-      yield put(getUsersSuccess(response.data));
-    }
+    const response = yield call(getAllUsers, payload);
+    yield put(getUsersSuccess(response.data));
   } catch (error) {
     yield put(getUsersError(error));
   }
@@ -43,15 +42,15 @@ function* fetchGetAllUsers({ payload }) {
 // get An user
 
 const getAnUser = async (user_id) => {
-  return await axios.get(`https://gorest.co.in/public/v2/users/${user_id}`);
+  return await axios.get(`https://gorest.co.in/public/v2/users/${user_id}`, {
+    headers: { Authorization: "Bearer " + ActionToken },
+  });
 };
 
 function* fetchGetAnUser({ payload }) {
-  const response = yield call(getAnUser, payload);
   try {
-    if (response.status === 200) {
-      yield put(getUserSuccess(response.data));
-    }
+    const response = yield call(getAnUser, payload);
+    yield put(getUserSuccess(response.data));
   } catch (error) {
     yield put(getUserError(error));
   }
@@ -66,12 +65,10 @@ const createUser = async (user) => {
 };
 
 function* fetchCreateUser({ payload }) {
-  const response = yield call(createUser, payload);
   try {
-    if (response.status === 201) {
-      yield put(createUserSuccess(response.data));
-      alert("thêm user thành công");
-    }
+    const response = yield call(createUser, payload);
+    yield put(createUserSuccess(response.data));
+    alert("thêm user thành công");
   } catch (error) {
     yield put(createUserError(error));
     alert("thêm user thất bại");
@@ -81,7 +78,7 @@ function* fetchCreateUser({ payload }) {
 // update user
 
 const updateUser = async (user) => {
-  return await axios.put(
+  return await axios.patch(
     `https://gorest.co.in/public/v2/users/${user?.id}`,
     user,
     {
@@ -91,12 +88,10 @@ const updateUser = async (user) => {
 };
 
 function* fetchUpdateUser({ payload }) {
-  const response = yield call(updateUser, payload);
   try {
-    if (response.status === 200) {
-      yield put(updateUserSuccess(payload));
-      alert("update user thành công");
-    }
+    const response = yield call(updateUser, payload);
+    yield put(updateUserSuccess(response.data));
+    alert("update user thành công");
   } catch (error) {
     yield put(updateUserError(error));
     alert("update user thất bại");
@@ -112,12 +107,10 @@ const deleteUser = async (user_id) => {
 };
 
 function* fetchDeleteUser({ payload }) {
-  const response = yield call(deleteUser, payload);
   try {
-    if (response.status === 204) {
-      yield put(deleteUserSuccess(payload));
-      alert("delete user thành công");
-    }
+    yield call(deleteUser, payload);
+    yield put(deleteUserSuccess(payload));
+    alert("delete user thành công");
   } catch (error) {
     yield put(deleteUserError(error));
     alert("delete user không thành công");
@@ -127,9 +120,9 @@ function* fetchDeleteUser({ payload }) {
 function* mySagas() {
   yield takeEvery(GET_USERS_REQUEST, fetchGetAllUsers);
   yield takeEvery(GET_USER_REQUEST, fetchGetAnUser);
-  yield takeEvery(CREATE_USER, fetchCreateUser);
-  yield takeLatest(DELETE_USER, fetchDeleteUser);
+  yield takeLatest(CREATE_USER, fetchCreateUser);
   yield takeLatest(UPDATE_USER, fetchUpdateUser);
+  yield takeLatest(DELETE_USER, fetchDeleteUser);
 }
 
 export default mySagas;
